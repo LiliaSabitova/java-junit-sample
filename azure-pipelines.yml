@@ -57,7 +57,6 @@ jobs:
 #      definition: 'a4b9c615-31e5-4a66-9567-8b05ea4e9eca'
 #      version: '1.1.0'
 #      downloadPath: '$(System.ArtifactsDirectory)'
-
   - task: DownloadPackageLiliya@1
     inputs:
       packageType: 'npm'
