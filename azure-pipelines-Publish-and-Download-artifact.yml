@@ -45,7 +45,7 @@ jobs:
       'Windows Zip':
         imageName: 'windows-latest'
         artifactName: 'drop + 9234857 Zip Windows'
-        DownloadBuildArtifactsLiliaS.ForceEnableDownloadZipForCanary : 'true'
+        DownloadBuildArtifacts.ForceEnableDownloadZipForCanary : 'true'
       # zip option works only for Windows
   pool:
     vmImage: $(imageName)
@@ -55,8 +55,8 @@ jobs:
   steps:
 
   # publish artifact to container
-  - task: PublishBuildArtifactsLiliaS@1
-    name: 'Pipeline_PublishBuildArtifactsLiliaS'
+  - task: PublishBuildArtifacts@1
+    name: 'Pipeline_PublishBuildArtifacts'
     displayName: 'Publish To Container'
     condition: always()
     timeoutInMinutes: 1
@@ -66,8 +66,8 @@ jobs:
       publishLocation: 'Container'
 
   # download artifact from container
-  - task: DownloadBuildArtifactsLiliaS@0 #.206.0
-    name: 'Pipeline_DownloadBuildArtifactsLiliaS'
+  - task: DownloadBuildArtifacts@0 #.206.0
+    name: 'Pipeline_DownloadBuildArtifacts'
     displayName: 'Download From Container'
     condition: always()
     timeoutInMinutes: 1
@@ -78,8 +78,8 @@ jobs:
       downloadPath: '$(System.ArtifactsDirectory)'
 
   # publish artifact to file path
-  - task: PublishBuildArtifactsLiliaS@1
-    name: 'FileShare_PublishBuildArtifactsLiliaS'
+  - task: PublishBuildArtifacts@1
+    name: 'FileShare_PublishBuildArtifacts'
     displayName: 'Publish To File Path'
     # file path option is only possible for Windows
     condition: and (eq(variables.imageName, 'windows-latest'), ${{ parameters.fileshare }})
@@ -91,8 +91,8 @@ jobs:
       TargetPath: '$(Pipeline.Workspace)'
 
   # download artifact from file path
-  - task: DownloadBuildArtifactsLiliaS@0 #.206.0
-    name: 'FileShare_DownloadBuildArtifactsLiliaS'
+  - task: DownloadBuildArtifacts@0 #.206.0
+    name: 'FileShare_DownloadBuildArtifacts'
     displayName: 'Download From File Path'
     # file path option is only possible for Windows
     condition: and (eq(variables.imageName, 'windows-latest'), ${{ parameters.fileshare }})
@@ -104,8 +104,8 @@ jobs:
       downloadPath: '$(System.ArtifactsDirectory)'
 
   # download multiple artifacts from this build
-  - task: DownloadBuildArtifactsLiliaS@0
-    name: 'All_DownloadBuildArtifactsLiliaS'
+  - task: DownloadBuildArtifacts@0
+    name: 'All_DownloadBuildArtifacts'
     displayName: 'Multiple Download From This Build'
     condition: and (always(), ${{ parameters.moreoptions }})
     timeoutInMinutes: 1
@@ -116,8 +116,8 @@ jobs:
       downloadPath: '$(System.ArtifactsDirectory)'
 
   # download multiple artifacts from previous run of this build
-  - task: DownloadBuildArtifactsLiliaS@0
-    name: 'All_Previous_DownloadBuildArtifactsLiliaS'
+  - task: DownloadBuildArtifacts@0
+    name: 'All_Previous_DownloadBuildArtifacts'
     displayName: 'Multiple Download From Other Build'
     condition: and (always(), ${{ parameters.moreoptions }})
     timeoutInMinutes: 1
@@ -132,8 +132,8 @@ jobs:
       downloadPath: '$(System.ArtifactsDirectory)'
 
   # download single artifact from previous run of this build
-  - task: DownloadBuildArtifactsLiliaS@0
-    name: 'Previous_DownloadBuildArtifactsLiliaS'
+  - task: DownloadBuildArtifacts@0
+    name: 'Previous_DownloadBuildArtifacts'
     displayName: 'Single Download From Other Build'
     condition: and (always(), ${{ parameters.moreoptions }})
     timeoutInMinutes: 1
@@ -159,7 +159,7 @@ jobs:
         artifactName: 'drop + 9234857 NoZip'
       'Artifact with + Zip':
         artifactName: 'drop + 9234857 Zip'
-        DownloadBuildArtifactsLiliaS.ForceEnableDownloadZipForCanary : 'true'
+        DownloadBuildArtifacts.ForceEnableDownloadZipForCanary : 'true'
       #'Artifact with !':
       #  artifactName: 'drop ! 9234857'
       #'Artifact with @':
@@ -203,8 +203,8 @@ jobs:
   steps:
 
   # publish artifact to container
-  - task: PublishBuildArtifactsLiliaS@1
-    name: 'Pipeline_PublishBuildArtifactsLiliaS'
+  - task: PublishBuildArtifacts@1
+    name: 'Pipeline_PublishBuildArtifacts'
     displayName: 'Publish To Container'
     condition: always()
     timeoutInMinutes: 1
@@ -214,8 +214,8 @@ jobs:
       publishLocation: 'Container'
 
   # download artifact from container
-  - task: DownloadBuildArtifactsLiliaS@0 #.206.0
-    name: 'Pipeline_DownloadBuildArtifactsLiliaS'
+  - task: DownloadBuildArtifacts@0 #.206.0
+    name: 'Pipeline_DownloadBuildArtifacts'
     displayName: 'Download From Container'
     condition: always()
     timeoutInMinutes: 1
@@ -227,8 +227,8 @@ jobs:
 
   # publish artifact to file path
   # file path option is only possible for Windows
-  - task: PublishBuildArtifactsLiliaS@1
-    name: 'FileShare_PublishBuildArtifactsLiliaS'
+  - task: PublishBuildArtifacts@1
+    name: 'FileShare_PublishBuildArtifacts'
     displayName: 'Publish To File Path'
     condition: ${{ parameters.fileshare }}
     timeoutInMinutes: 1
@@ -240,8 +240,8 @@ jobs:
 
   # download artifact from file path
   # file path option is only possible for Windows
-  - task: DownloadBuildArtifactsLiliaS@0 #.206.0
-    name: 'FileShare_DownloadBuildArtifactsLiliaS'
+  - task: DownloadBuildArtifacts@0 #.206.0
+    name: 'FileShare_DownloadBuildArtifacts'
     displayName: 'Download From File Path'
     condition: ${{ parameters.fileshare }}
     timeoutInMinutes: 1
@@ -252,8 +252,8 @@ jobs:
       downloadPath: '$(System.ArtifactsDirectory)'
 
   # download multiple artifacts from this build
-  - task: DownloadBuildArtifactsLiliaS@0
-    name: 'All_DownloadBuildArtifactsLiliaS'
+  - task: DownloadBuildArtifacts@0
+    name: 'All_DownloadBuildArtifacts'
     displayName: 'Multiple Download From This Build'
     condition: and (always(), ${{ parameters.moreoptions }})
     timeoutInMinutes: 1
@@ -264,8 +264,8 @@ jobs:
       downloadPath: '$(System.ArtifactsDirectory)'
 
   # download multiple artifacts from previous run of this build
-  - task: DownloadBuildArtifactsLiliaS@0
-    name: 'All_Previous_DownloadBuildArtifactsLiliaS'
+  - task: DownloadBuildArtifacts@0
+    name: 'All_Previous_DownloadBuildArtifacts'
     displayName: 'Multiple Download From Other Build'
     condition: and (always(), ${{ parameters.moreoptions }})
     timeoutInMinutes: 1
@@ -280,8 +280,8 @@ jobs:
       downloadPath: '$(System.ArtifactsDirectory)'
 
   # download single artifact from previous run of this build
-  - task: DownloadBuildArtifactsLiliaS@0
-    name: 'Previous_DownloadBuildArtifactsLiliaS'
+  - task: DownloadBuildArtifacts@0
+    name: 'Previous_DownloadBuildArtifacts'
     displayName: 'Single Download From Other Build'
     condition: and (always(), ${{ parameters.moreoptions }})
     timeoutInMinutes: 1
