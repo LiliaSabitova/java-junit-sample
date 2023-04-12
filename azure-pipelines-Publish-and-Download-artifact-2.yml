@@ -13,8 +13,8 @@ jobs:
     displayName: 'Publish To Container'
     condition: always()
     timeoutInMinutes: 1
-    #env:
-    #  TASKS_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: false
+    env:
+      TASKS_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: false
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/src'
       ArtifactName: 'drop + 9234857 NoZip'
@@ -26,8 +26,8 @@ jobs:
     displayName: 'Download From Container'
     condition: always()
     timeoutInMinutes: 1
-    #env:
-    #  TASKS_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: false
+    env:
+      TASKS_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: false
     inputs:
       buildType: 'current'
       downloadType: 'single'
