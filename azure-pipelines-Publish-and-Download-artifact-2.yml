@@ -8,8 +8,8 @@ jobs:
   steps:
 
   # publish artifact to container
-  - task: PublishBuildArtifactsLiliaS@1
-    name: 'Pipeline_PublishBuildArtifactsLiliaS'
+  - task: PublishBuildArtifacts@1
+    name: 'Pipeline_PublishBuildArtifacts'
     displayName: 'Publish To Container'
     condition: always()
     timeoutInMinutes: 1
@@ -21,8 +21,8 @@ jobs:
       publishLocation: 'Container'
 
   # download artifact from container
-  - task: DownloadBuildArtifactsLiliaS@0 #.206.0
-    name: 'Pipeline_DownloadBuildArtifactsLiliaS'
+  - task: DownloadBuildArtifacts@0 #.206.0
+    name: 'Pipeline_DownloadBuildArtifacts'
     displayName: 'Download From Container'
     condition: always()
     timeoutInMinutes: 1
