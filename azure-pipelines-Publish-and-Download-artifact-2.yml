@@ -10,7 +10,7 @@ jobs:
   # publish artifact to container
   - task: PublishBuildArtifacts@1  
     env:
-      AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: true
+      AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: false
     name: 'Pipeline_PublishBuildArtifacts'
     displayName: 'Publish To Container'
     condition: always()
@@ -25,7 +25,7 @@ jobs:
   # download artifact from container
   - task: DownloadBuildArtifacts@0 #.206.0
     env:
-      AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: true
+      AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: false
     name: 'Pipeline_DownloadBuildArtifacts'
     displayName: 'Download From Container'
     condition: always()
