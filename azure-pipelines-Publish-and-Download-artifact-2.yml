@@ -14,7 +14,7 @@ jobs:
     condition: always()
     timeoutInMinutes: 1
     env:
-      TASKS_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: true
+      AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: true
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/src'
       ArtifactName: 'drop + 9234857 NoZip'
@@ -27,7 +27,7 @@ jobs:
     condition: always()
     timeoutInMinutes: 1
     env:
-      TASKS_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: true
+      AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: true
     inputs:
       buildType: 'current'
       downloadType: 'single'
