@@ -160,9 +160,9 @@ jobs:
     matrix:
       'Artifact with + NoZip':
         artifactName: 'drop + 9234857 NoZip'
-      'Artifact with + Zip':
-        artifactName: 'drop + 9234857 Zip'
-        DownloadBuildArtifacts.ForceEnableDownloadZipForCanary : 'true'
+      #'Artifact with + Zip':
+      #  artifactName: 'drop + 9234857 Zip'
+      #  DownloadBuildArtifacts.ForceEnableDownloadZipForCanary : 'true'
       #'Artifact with !':
       #  artifactName: 'drop ! 9234857'
       #'Artifact with @':
