@@ -5,7 +5,7 @@ trigger: none
 # FIRST RUN - with default parameters, SECOND RUN - enable moreoptions, THIRD RUN - enable fileshare !!!
 
 variables:
-  AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: true
+  AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: false
 
 parameters:
 - name: runmshosted
@@ -36,19 +36,19 @@ jobs:
   displayName: 'MS-Hosted'
   strategy:
     matrix:
-      'Ubuntu NoZip':
-        imageName: 'ubuntu-latest'
-        artifactName: 'drop + 9234857 NoZip Ubuntu'
-      'MacOS NoZip':
-        imageName: 'macOS-latest'
-        artifactName: 'drop + 9234857 NoZip MacOS'
+      #'Ubuntu NoZip':
+      #  imageName: 'ubuntu-latest'
+      #  artifactName: 'drop + 9234857 NoZip Ubuntu'
+      #'MacOS NoZip':
+      #  imageName: 'macOS-latest'
+      #  artifactName: 'drop + 9234857 NoZip MacOS'
       'Windows NoZip':
         imageName: 'windows-latest'
         artifactName: 'drop + 9234857 NoZip Windows'
-      'Windows Zip':
-        imageName: 'windows-latest'
-        artifactName: 'drop + 9234857 Zip Windows'
-        DownloadBuildArtifacts.ForceEnableDownloadZipForCanary : 'true'
+      #'Windows Zip':
+      #  imageName: 'windows-latest'
+      #  artifactName: 'drop + 9234857 Zip Windows'
+      #  DownloadBuildArtifacts.ForceEnableDownloadZipForCanary : 'true'
       # zip option works only for Windows
   pool:
     vmImage: $(imageName)
