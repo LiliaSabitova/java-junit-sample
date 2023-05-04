@@ -9,7 +9,7 @@ trigger: none
 
 parameters:
 - name: runmshosted
-  default: true
+  default: false
   displayName: Run MS-Hosted
   type: boolean
 - name: runselfhosted
