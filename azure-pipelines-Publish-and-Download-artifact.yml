@@ -5,7 +5,7 @@ trigger: none
 # FIRST RUN - with default parameters, SECOND RUN - enable moreoptions, THIRD RUN - enable fileshare !!!
 
 variables:
-  AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: "true"
+  AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: 'true'
 
 parameters:
 - name: runmshosted
