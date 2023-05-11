@@ -11,9 +11,14 @@ variables:
   
 
 jobs:
-- job: 'Self_Hosted'
-  displayName: 'Self-Hosted'  
-  pool: Default
+#- job: 'Self_Hosted'
+#  displayName: 'Self-Hosted'
+#  pool: Default
+- job: 'MS_Hosted'
+  displayName: 'MS-Hosted'
+  pool:
+    vmImage: windows-latest
+
 
   steps:
 #-------------------------------------------------------------------------
