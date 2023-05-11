@@ -2,6 +2,8 @@ trigger: none
 
 # variables:
 #  AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: true
+variables:
+  DownloadBuildArtifacts.ForceEnableDownloadZipForCanary : 'true'
 
 jobs:
 - job: 'Self_Hosted'
