@@ -113,8 +113,8 @@ jobs:
     timeoutInMinutes: 1
     inputs:
       buildType: 'specific'
-      project: 'b93518f3-c050-4662-a4f2-174106f5081b'
-      pipeline: '217'
+      project: '8e990140-cc7d-4067-90bf-5ea049bb3fc1'
+      pipeline: '2'
       buildVersionToDownload: 'latest'
       allowPartiallySucceededBuilds: true
       downloadType: 'specific'
@@ -129,8 +129,8 @@ jobs:
     timeoutInMinutes: 1
     inputs:
       buildType: 'specific'
-      project: 'b93518f3-c050-4662-a4f2-174106f5081b'
-      pipeline: '217'
+      project: '8e990140-cc7d-4067-90bf-5ea049bb3fc1'
+      pipeline: '2'
       buildVersionToDownload: 'latest'
       allowPartiallySucceededBuilds: true
       downloadType: 'single'
