@@ -3,7 +3,12 @@ trigger: none
 # variables:
 #  AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: true
 variables:
-  DownloadBuildArtifacts.ForceEnableDownloadZipForCanary : 'true'
+- name: artifactname
+  value: 'drop.9234857.pep'
+- name: DownloadBuildArtifacts.ForceEnableDownloadZipForCanary
+  value: 'true'
+
+  
 
 jobs:
 - job: 'Self_Hosted'
@@ -24,7 +29,7 @@ jobs:
     #  AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: true
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/src'
-      ArtifactName: 'drop . 9234857 NoZip'
+      ArtifactName: ${{ variables.artifactname }}
       publishLocation: 'Container'
 
   # download artifact from container
@@ -38,5 +43,5 @@ jobs:
     inputs:
       buildType: 'current'
       downloadType: 'single'
-      artifactName: 'drop . 9234857 NoZip'
+      artifactName: ${{ variables.artifactname }}
       downloadPath: '$(System.ArtifactsDirectory)'
