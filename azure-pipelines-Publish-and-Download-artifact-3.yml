@@ -16,6 +16,20 @@ jobs:
   pool: Default
 
   steps:
+#-------------------------------------------------------------------------
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Build.SourcesDirectory)/src'
+      artifact: 'drop.32875.gdf'
+      publishLocation: 'pipeline'
+
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      buildType: 'current'
+      artifactName: 'drop.32875.gdf'
+      targetPath: '$(Pipeline.Workspace)'
+#-------------------------------------------------------------------------
+
 
   # publish artifact to container
   - task: PublishBuildArtifacts@1  
