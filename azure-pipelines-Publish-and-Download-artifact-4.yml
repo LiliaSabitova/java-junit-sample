@@ -1,0 +1,299 @@
+trigger: none
+
+## STEPS ARE THE SAME FOR BOTH JOBS: MS_Hosted and Self_Hosted
+
+# FIRST RUN - with default parameters, SECOND RUN - enable moreoptions, THIRD RUN - enable fileshare !!!
+
+variables:
+  AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND: "True"
+
+parameters:
+- name: runmshosted
+  default: false
+  displayName: Run MS-Hosted
+  type: boolean
+- name: runselfhosted
+  default: true
+  displayName: Run Self-Hosted
+  type: boolean
+  # just more steps to run, less steps - for testing pipeline is ok
+  # FIRST RUN - with default parameters, SECOND RUN - enable moreoptions, THIRD RUN - enable fileshare !!!
+- name: moreoptions
+  default: false
+  displayName: Run Many
+  type: boolean
+  # enable file path artifacts
+  # FIRST RUN - with default parameters, SECOND RUN - enable moreoptions, THIRD RUN - enable fileshare !!!
+- name: fileshare
+  default: false
+  displayName: Enable File Path Artifacts
+  type: boolean
+
+jobs:
+
+- job: 'MS_Hosted'
+  condition: ${{ parameters.runmshosted }}
+  displayName: 'MS-Hosted'
+  strategy:
+    matrix:
+      #'Ubuntu NoZip':
+      #  imageName: 'ubuntu-latest'
+      #  artifactName: 'drop + 9234857 NoZip Ubuntu'
+      #'MacOS NoZip':
+      #  imageName: 'macOS-latest'
+      #  artifactName: 'drop + 9234857 NoZip MacOS'
+      'Windows NoZip':
+        imageName: 'windows-latest'
+        artifactName: 'drop + 9234857 NoZip Windows'
+      #'Windows Zip':
+      #  imageName: 'windows-latest'
+      #  artifactName: 'drop + 9234857 Zip Windows'
+      #  DownloadBuildArtifacts.ForceEnableDownloadZipForCanary : 'true'
+      # zip option works only for Windows
+  pool:
+    vmImage: $(imageName)
+
+
+## STEPS ARE THE SAME FOR BOTH JOBS: MS_Hosted and Self_Hosted
+  steps:
+
+  # publish artifact to container
+  - task: PublishBuildArtifacts@1
+    name: 'Pipeline_PublishBuildArtifacts'
+    displayName: 'Publish To Container'
+    condition: always()
+    timeoutInMinutes: 1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/src'
+      ArtifactName: $(artifactName)
+      publishLocation: 'Container'
+
+  # download artifact from container
+  - task: DownloadBuildArtifacts@0 #.206.0
+    name: 'Pipeline_DownloadBuildArtifacts'
+    displayName: 'Download From Container'
+    condition: always()
+    timeoutInMinutes: 1
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: $(artifactName)
+      downloadPath: '$(System.ArtifactsDirectory)'
+
+  # publish artifact to file path
+  - task: PublishBuildArtifacts@1
+    name: 'FileShare_PublishBuildArtifacts'
+    displayName: 'Publish To File Path'
+    # file path option is only possible for Windows
+    condition: and (eq(variables.imageName, 'windows-latest'), ${{ parameters.fileshare }})
+    timeoutInMinutes: 1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/src'
+      ArtifactName: '$(artifactName)2'
+      publishLocation: 'FilePath'
+      TargetPath: '$(Pipeline.Workspace)'
+
+  # download artifact from file path
+  - task: DownloadBuildArtifacts@0 #.206.0
+    name: 'FileShare_DownloadBuildArtifacts'
+    displayName: 'Download From File Path'
+    # file path option is only possible for Windows
+    condition: and (eq(variables.imageName, 'windows-latest'), ${{ parameters.fileshare }})
+    timeoutInMinutes: 1
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: '$(artifactName)2'
+      downloadPath: '$(System.ArtifactsDirectory)'
+
+  # download multiple artifacts from this build
+  - task: DownloadBuildArtifacts@0
+    name: 'All_DownloadBuildArtifacts'
+    displayName: 'Multiple Download From This Build'
+    condition: and (always(), ${{ parameters.moreoptions }})
+    timeoutInMinutes: 1
+    inputs:
+      buildType: 'current'
+      downloadType: 'specific'
+      itemPattern: '**/*.yml'
+      downloadPath: '$(System.ArtifactsDirectory)'
+
+  # download multiple artifacts from previous run of this build
+  - task: DownloadBuildArtifacts@0
+    name: 'All_Previous_DownloadBuildArtifacts'
+    displayName: 'Multiple Download From Other Build'
+    condition: and (always(), ${{ parameters.moreoptions }})
+    timeoutInMinutes: 1
+    inputs:
+      buildType: 'specific'
+      project: 'b93518f3-c050-4662-a4f2-174106f5081b'
+      pipeline: '217'
+      buildVersionToDownload: 'latest'
+      allowPartiallySucceededBuilds: true
+      downloadType: 'specific'
+      itemPattern: '**/*.yml'
+      downloadPath: '$(System.ArtifactsDirectory)'
+
+  # download single artifact from previous run of this build
+  - task: DownloadBuildArtifacts@0
+    name: 'Previous_DownloadBuildArtifacts'
+    displayName: 'Single Download From Other Build'
+    condition: and (always(), ${{ parameters.moreoptions }})
+    timeoutInMinutes: 1
+    inputs:
+      buildType: 'specific'
+      project: 'b93518f3-c050-4662-a4f2-174106f5081b'
+      pipeline: '217'
+      buildVersionToDownload: 'latest'
+      allowPartiallySucceededBuilds: true
+      downloadType: 'single'
+      artifactName: '$(artifactName)'
+      downloadPath: '$(System.ArtifactsDirectory)'
+
+
+
+- job: 'Self_Hosted'
+  condition: ${{ parameters.runselfhosted }}
+  displayName: 'Self-Hosted'  
+  pool: Default
+  strategy:
+    matrix:
+      'Artifact with + NoZip':
+        artifactName: 'drop + 9234857 NoZip'
+      #'Artifact with + Zip':
+      #  artifactName: 'drop + 9234857 Zip'
+      #  DownloadBuildArtifacts.ForceEnableDownloadZipForCanary : 'true'
+      #'Artifact with !':
+      #  artifactName: 'drop ! 9234857'
+      #'Artifact with @':
+      #  artifactName: 'drop @ 9234857'
+      #'Artifact with #':
+      #  artifactName: 'drop # 9234857'
+      #'Artifact with %':
+      #  artifactName: 'drop % 9234857'
+      #'Artifact with ^':
+      #  artifactName: 'drop ^ 9234857'
+      #'Artifact with :':
+      #  artifactName: 'drop : 9234857'
+      #'Artifact with ?':
+      #  artifactName: 'drop ? 9234857'
+      #'Artifact with ()':
+      #  artifactName: 'drop () 9234857'
+      #'Artifact with *':
+      #  artifactName: 'drop * 9234857'
+      #'Artifact with $':
+      #  artifactName: 'drop $ 9234857'
+      #'Artifact with -+=':
+      #  artifactName: 'drop -+= 9234857'
+      #'Artifact with /':
+      #  artifactName: 'drop / 9234857'
+      #'Artifact with \':
+      #  artifactName: 'drop \ 9234857'
+      #'Artifact with |':
+      #  artifactName: 'drop | 9234857'
+      #'Artifact with ,':
+      #  artifactName: 'drop , 9234857'
+      #'Artifact with .':
+      #  artifactName: 'drop . 9234857'
+      #'Artifact with `':
+      #  artifactName: 'drop ` 9234857'
+      #'Artifact with ~':
+      #  artifactName: 'drop ~ 9234857'
+
+
+
+## STEPS ARE THE SAME FOR BOTH JOBS: MS_Hosted and Self_Hosted
+  steps:
+
+  # publish artifact to container
+  - task: PublishBuildArtifacts@1
+    name: 'Pipeline_PublishBuildArtifacts'
+    displayName: 'Publish To Container'
+    condition: always()
+    timeoutInMinutes: 1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/src'
+      ArtifactName: $(artifactName)
+      publishLocation: 'Container'
+
+  # download artifact from container
+  - task: DownloadBuildArtifacts@0 #.206.0
+    name: 'Pipeline_DownloadBuildArtifacts'
+    displayName: 'Download From Container'
+    condition: always()
+    timeoutInMinutes: 1
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: $(artifactName)
+      downloadPath: '$(System.ArtifactsDirectory)'
+
+  # publish artifact to file path
+  # file path option is only possible for Windows
+  - task: PublishBuildArtifacts@1
+    name: 'FileShare_PublishBuildArtifacts'
+    displayName: 'Publish To File Path'
+    condition: ${{ parameters.fileshare }}
+    timeoutInMinutes: 1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/src'
+      ArtifactName: '$(artifactName)2'
+      publishLocation: 'FilePath'
+      TargetPath: '$(Pipeline.Workspace)'
+
+  # download artifact from file path
+  # file path option is only possible for Windows
+  - task: DownloadBuildArtifacts@0 #.206.0
+    name: 'FileShare_DownloadBuildArtifacts'
+    displayName: 'Download From File Path'
+    condition: ${{ parameters.fileshare }}
+    timeoutInMinutes: 1
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: '$(artifactName)2'
+      downloadPath: '$(System.ArtifactsDirectory)'
+
+  # download multiple artifacts from this build
+  - task: DownloadBuildArtifacts@0
+    name: 'All_DownloadBuildArtifacts'
+    displayName: 'Multiple Download From This Build'
+    condition: and (always(), ${{ parameters.moreoptions }})
+    timeoutInMinutes: 1
+    inputs:
+      buildType: 'current'
+      downloadType: 'specific'
+      itemPattern: '**/*.yml'
+      downloadPath: '$(System.ArtifactsDirectory)'
+
+  # download multiple artifacts from previous run of this build
+  - task: DownloadBuildArtifacts@0
+    name: 'All_Previous_DownloadBuildArtifacts'
+    displayName: 'Multiple Download From Other Build'
+    condition: and (always(), ${{ parameters.moreoptions }})
+    timeoutInMinutes: 1
+    inputs:
+      buildType: 'specific'
+      project: 'b93518f3-c050-4662-a4f2-174106f5081b'
+      pipeline: '217'
+      buildVersionToDownload: 'latest'
+      allowPartiallySucceededBuilds: true
+      downloadType: 'specific'
+      itemPattern: '**/*.yml'
+      downloadPath: '$(System.ArtifactsDirectory)'
+
+  # download single artifact from previous run of this build
+  - task: DownloadBuildArtifacts@0
+    name: 'Previous_DownloadBuildArtifacts'
+    displayName: 'Single Download From Other Build'
+    condition: and (always(), ${{ parameters.moreoptions }})
+    timeoutInMinutes: 1
+    inputs:
+      buildType: 'specific'
+      project: 'b93518f3-c050-4662-a4f2-174106f5081b'
+      pipeline: '217'
+      buildVersionToDownload: 'latest'
+      allowPartiallySucceededBuilds: true
+      downloadType: 'single'
+      artifactName: '$(artifactName)'
+      downloadPath: '$(System.ArtifactsDirectory)'
