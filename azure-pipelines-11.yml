@@ -15,7 +15,7 @@ jobs:
     condition: succeededOrFailed()
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/123456.zip'
-      ArtifactName: 'myfeed.data'
+      ArtifactName: 'myfeed.data.'
       publishLocation: 'Container'
   - task: DownloadBuildArtifacts@1
     inputs:
