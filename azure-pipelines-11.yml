@@ -1,0 +1,24 @@
+trigger:
+- none
+pool: Default
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  steps:
+  - checkout: self
+  - script: |
+      echo DummyFile > DummyFile.txt
+      tar.exe -a -c -f $(Build.ArtifactStagingDirectory)/123456.zip DummyFile.txt
+    displayName: 'Create Dummy Zip File'
+  - task: PublishBuildArtifacts@1
+    displayName: publish artifact
+    condition: succeededOrFailed()
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'myfeed.data'
+      publishLocation: 'Container'
+  - task: DownloadBuildArtifacts@1
+    inputs:
+      buildType: 'current'
+      downloadType: 'specific'
+      downloadPath: '$(System.ArtifactsDirectory)'
